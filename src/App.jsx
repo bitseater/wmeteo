@@ -62,6 +62,8 @@ const getDailyForecast = (forecastList, timezoneOffset) => {
         }),
         tempMin: `${Math.round(Math.min(...temps))}°C`,
         tempMax: `${Math.round(Math.max(...temps))}°C`,
+        minTemp: Math.round(Math.min(...temps)),
+        maxTemp: Math.round(Math.max(...temps)),
         icon: getWeatherIcon(midday.weather[0].icon),
         description: midday.weather[0].description,
       }
@@ -71,10 +73,90 @@ const getDailyForecast = (forecastList, timezoneOffset) => {
 export default function App() {
   const [cityInput, setCityInput] = useState('')
   const [weather, setWeather] = useState(null)
+  const [locations, setLocations] = useState([])
   const [message, setMessage] = useState('Introduce una ciudad y pulsa Buscar para ver el clima actual.')
   const [loading, setLoading] = useState(false)
 
   const apiKey = import.meta.env.VITE_OPENWEATHER_API_KEY
+
+  const chartConfig = {
+    width: 560,
+    height: 220,
+    margin: { top: 28, right: 16, bottom: 34, left: 32 },
+  }
+
+  const forecastPoints = weather?.daily?.length
+    ? (() => {
+        const values = weather.daily.flatMap((day) => [day.maxTemp, day.minTemp])
+        const maxValue = Math.max(...values)
+        const minValue = Math.min(...values)
+        const range = maxValue - minValue || 1
+        const plotWidth = chartConfig.width - chartConfig.margin.left - chartConfig.margin.right
+        const plotHeight = chartConfig.height - chartConfig.margin.top - chartConfig.margin.bottom
+
+        return weather.daily.map((day, index) => {
+          const x = chartConfig.margin.left + (index / ((weather.daily.length - 1) || 1)) * plotWidth
+          const yMax = chartConfig.margin.top + (1 - (day.maxTemp - minValue) / range) * plotHeight
+          const yMin = chartConfig.margin.top + (1 - (day.minTemp - minValue) / range) * plotHeight
+          return { ...day, x, yMax, yMin }
+        })
+      })()
+    : []
+
+  const fetchWeatherByCoords = async (location) => {
+    const params = `lat=${location.lat}&lon=${location.lon}&units=metric&lang=es&appid=${apiKey}`
+    const weatherResponse = await fetch(`https://api.openweathermap.org/data/2.5/weather?${params}`)
+    if (!weatherResponse.ok) {
+      const errorData = await weatherResponse.json()
+      throw new Error(errorData.message || 'Error al obtener el clima')
+    }
+
+    const forecastResponse = await fetch(`https://api.openweathermap.org/data/2.5/forecast?${params}`)
+    if (!forecastResponse.ok) {
+      const errorData = await forecastResponse.json()
+      throw new Error(errorData.message || 'Error al obtener el pronóstico')
+    }
+
+    const weatherData = await weatherResponse.json()
+    const forecastData = await forecastResponse.json()
+
+    const hourly = Array.isArray(forecastData.list)
+      ? forecastData.list.slice(0, 4).map((item) => ({
+          time: formatTime(item.dt, weatherData.timezone),
+          temp: `${Math.round(item.main.temp)}°C`,
+        }))
+      : []
+
+    const dailyForecast = Array.isArray(forecastData.list)
+      ? getDailyForecast(forecastData.list, weatherData.timezone)
+      : []
+
+    return {
+      city: location.name || weatherData.name,
+      state: location.state,
+      country: weatherData.sys.country,
+      temp: Math.round(weatherData.main.temp),
+      description: weatherData.weather[0].description,
+      humidity: weatherData.main.humidity,
+      wind: Math.round(weatherData.wind.speed * 3.6),
+      feelsLike: Math.round(weatherData.main.feels_like),
+      uvIndex: '-',
+      sunrise: formatTime(weatherData.sys.sunrise, weatherData.timezone),
+      sunset: formatTime(weatherData.sys.sunset, weatherData.timezone),
+      icon: getWeatherIcon(weatherData.weather[0].icon),
+      details: [
+        { label: 'Temperatura', value: `${Math.round(weatherData.main.temp)}°C` },
+        { label: 'Sensación', value: `${Math.round(weatherData.main.feels_like)}°C` },
+        { label: 'Humedad', value: `${weatherData.main.humidity}%` },
+        { label: 'Viento', value: `${Math.round(weatherData.wind.speed * 3.6)} km/h` },
+        { label: 'Índice UV', value: 'N/A' },
+        { label: 'Amanecer', value: formatTime(weatherData.sys.sunrise, weatherData.timezone) },
+        { label: 'Atardecer', value: formatTime(weatherData.sys.sunset, weatherData.timezone) },
+      ],
+      hourly,
+      daily: dailyForecast,
+    }
+  }
 
   const handleSearch = async (event) => {
     event.preventDefault()
@@ -82,74 +164,79 @@ export default function App() {
     if (!city) {
       setMessage('Por favor escribe el nombre de una ciudad.')
       setWeather(null)
+      setLocations([])
       return
     }
 
     if (!apiKey) {
       setMessage('Falta la clave de OpenWeather. Crea un archivo .env con VITE_OPENWEATHER_API_KEY.')
       setWeather(null)
+      setLocations([])
       return
     }
 
     setLoading(true)
     setMessage('')
     setWeather(null)
+    setLocations([])
 
     try {
-      const weatherResponse = await fetch(
-        `https://api.openweathermap.org/data/2.5/weather?q=${encodeURIComponent(city)}&units=metric&lang=es&appid=${apiKey}`
+      const geoResponse = await fetch(
+        `https://api.openweathermap.org/geo/1.0/direct?q=${encodeURIComponent(city)}&limit=5&appid=${apiKey}`
       )
-      if (!weatherResponse.ok) {
-        const errorData = await weatherResponse.json()
+      if (!geoResponse.ok) {
+        const errorData = await geoResponse.json()
         throw new Error(errorData.message || 'No se encontró la ciudad')
       }
 
-      const weatherData = await weatherResponse.json()
-      const forecastResponse = await fetch(
-        `https://api.openweathermap.org/data/2.5/forecast?q=${encodeURIComponent(city)}&units=metric&lang=es&appid=${apiKey}`
-      )
-      const forecastData = await forecastResponse.json()
-
-      const hourly = Array.isArray(forecastData.list)
-        ? forecastData.list.slice(0, 4).map((item) => ({
-            time: formatTime(item.dt, weatherData.timezone),
-            temp: `${Math.round(item.main.temp)}°C`,
-          }))
-        : []
-
-      const dailyForecast = Array.isArray(forecastData.list)
-        ? getDailyForecast(forecastData.list, weatherData.timezone)
-        : []
-
-      const weatherResult = {
-        city: weatherData.name,
-        country: weatherData.sys.country,
-        temp: Math.round(weatherData.main.temp),
-        description: weatherData.weather[0].description,
-        humidity: weatherData.main.humidity,
-        wind: Math.round(weatherData.wind.speed * 3.6),
-        feelsLike: Math.round(weatherData.main.feels_like),
-        uvIndex: '-',
-        sunrise: formatTime(weatherData.sys.sunrise, weatherData.timezone),
-        sunset: formatTime(weatherData.sys.sunset, weatherData.timezone),
-        icon: getWeatherIcon(weatherData.weather[0].icon),
-        details: [
-          { label: 'Temperatura', value: `${Math.round(weatherData.main.temp)}°C` },
-          { label: 'Sensación', value: `${Math.round(weatherData.main.feels_like)}°C` },
-          { label: 'Humedad', value: `${weatherData.main.humidity}%` },
-          { label: 'Viento', value: `${Math.round(weatherData.wind.speed * 3.6)} km/h` },
-          { label: 'Índice UV', value: 'N/A' },
-          { label: 'Amanecer', value: formatTime(weatherData.sys.sunrise, weatherData.timezone) },
-          { label: 'Atardecer', value: formatTime(weatherData.sys.sunset, weatherData.timezone) },
-        ],
-        hourly,
-        daily: dailyForecast,
+      const geoData = await geoResponse.json()
+      if (!Array.isArray(geoData) || geoData.length === 0) {
+        throw new Error('No se encontró ninguna ciudad con ese nombre')
       }
+
+      if (geoData.length > 1) {
+        setLocations(
+          geoData.map((item) => ({
+            name: item.name,
+            state: item.state,
+            country: item.country,
+            lat: item.lat,
+            lon: item.lon,
+          }))
+        )
+        setMessage('Selecciona la ciudad correcta de la lista.')
+        return
+      }
+
+      const weatherResult = await fetchWeatherByCoords({
+        name: geoData[0].name,
+        state: geoData[0].state,
+        country: geoData[0].country,
+        lat: geoData[0].lat,
+        lon: geoData[0].lon,
+      })
 
       setWeather(weatherResult)
     } catch (error) {
       setWeather(null)
+      setLocations([])
       setMessage(`Error obteniendo el clima: ${error.message}`)
+    } finally {
+      setLoading(false)
+    }
+  }
+
+  const handleLocationSelect = async (location) => {
+    setLoading(true)
+    setMessage('')
+    setLocations([])
+
+    try {
+      const weatherResult = await fetchWeatherByCoords(location)
+      setWeather(weatherResult)
+    } catch (error) {
+      setMessage(`Error obteniendo el clima: ${error.message}`)
+      setWeather(null)
     } finally {
       setLoading(false)
     }
@@ -157,11 +244,19 @@ export default function App() {
 
   return (
     <div className="app weather-app">
+      {weather && (
+        <div className="top-actions">
+          <button type="button">Ver Mapa</button>
+          <button type="button">Configuración</button>
+          <button type="button">Acerca de</button>
+        </div>
+      )}
+
       <header className="app-header">
         <div>
-          <p className="eyebrow">WMeteo</p>
-          <h1>Consulta el clima de tu ciudad</h1>
-          <p className="subtitle">Escribe una ciudad para ver el contenido en formato de tarjeta meteorológica.</p>
+          <p className="eyebrow">Consulta el clima de tu ciudad</p>
+          <h1>WMeteo</h1>
+          <p className="subtitle">Escribe una ciudad para ver la previsión meteorológica.</p>
         </div>
       </header>
 
@@ -179,6 +274,25 @@ export default function App() {
         </div>
       </form>
 
+      {locations.length > 0 && (
+        <section className="location-list-card">
+          <div className="info-title">Ciudades encontradas</div>
+          <div className="location-list">
+            {locations.map((location) => (
+              <button
+                key={`${location.name}-${location.state || 'no'}-${location.country}-${location.lat}-${location.lon}`}
+                type="button"
+                className="location-item"
+                onClick={() => handleLocationSelect(location)}
+              >
+                <span>{location.name}{location.state ? `, ${location.state}` : ''}</span>
+                <small>{location.country}</small>
+              </button>
+            ))}
+          </div>
+        </section>
+      )}
+
       {message && !weather && (
         <div className="alert-message">{message}</div>
       )}
@@ -189,7 +303,10 @@ export default function App() {
             <div className="weather-summary">
               <div className="location">
                 <span>{weather.city}</span>
-                <small>{weather.country}</small>
+                <small>
+                  {weather.state ? `${weather.state}, ` : ''}
+                  {weather.country}
+                </small>
               </div>
               <h2>{weather.temp}°</h2>
               <p>{weather.description}</p>
@@ -228,18 +345,80 @@ export default function App() {
       {weather?.daily?.length > 0 && (
         <section className="daily-forecast-card">
           <div className="info-title">Pronóstico para los próximos 5 días</div>
-          <div className="daily-grid">
-            {weather.daily.map((day) => (
-              <div key={day.dateLabel} className="daily-day">
-                <span className="daily-day-label">{day.dateLabel}</span>
-                <div className="daily-day-icon">{day.icon}</div>
-                <span className="daily-day-desc">{day.description}</span>
-                <div className="daily-day-temp">
-                  <strong>{day.tempMax}</strong>
-                  <span>{day.tempMin}</span>
+          <div className="forecast-chart-card">
+            <svg
+              width={chartConfig.width}
+              height={chartConfig.height}
+              viewBox={`0 0 ${chartConfig.width} ${chartConfig.height}`}
+              role="img"
+              aria-label="Pronóstico de temperatura máxima y mínima"
+            >
+              <rect
+                x="0"
+                y="0"
+                width={chartConfig.width}
+                height={chartConfig.height}
+                fill="transparent"
+              />
+              <g>
+                {forecastPoints.map((point, index) => (
+                  <React.Fragment key={`max-${point.dateLabel}`}>
+                    {index > 0 && (
+                      <line
+                        x1={forecastPoints[index - 1].x}
+                        y1={forecastPoints[index - 1].yMax}
+                        x2={point.x}
+                        y2={point.yMax}
+                        stroke="#2f6ce5"
+                        strokeWidth="3"
+                        fill="none"
+                      />
+                    )}
+                    <circle cx={point.x} cy={point.yMax} r="4" fill="#2f6ce5" />
+                  </React.Fragment>
+                ))}
+              </g>
+              <g>
+                {forecastPoints.map((point, index) => (
+                  <React.Fragment key={`min-${point.dateLabel}`}>
+                    {index > 0 && (
+                      <line
+                        x1={forecastPoints[index - 1].x}
+                        y1={forecastPoints[index - 1].yMin}
+                        x2={point.x}
+                        y2={point.yMin}
+                        stroke="#f59e0b"
+                        strokeWidth="3"
+                        fill="none"
+                      />
+                    )}
+                    <circle cx={point.x} cy={point.yMin} r="4" fill="#f59e0b" />
+                  </React.Fragment>
+                ))}
+              </g>
+            </svg>
+            <div className="forecast-legend">
+              <span className="legend-item">
+                <span className="legend-dot" style={{ backgroundColor: '#2f6ce5' }}></span>
+                Máximo
+              </span>
+              <span className="legend-item">
+                <span className="legend-dot" style={{ backgroundColor: '#f59e0b' }}></span>
+                Mínimo
+              </span>
+            </div>
+            <div className="forecast-details-grid">
+              {weather.daily.map((day) => (
+                <div key={day.dateLabel} className="forecast-day-detail">
+                  <div className="forecast-day-label">{day.dateLabel.split(',')[0]}</div>
+                  <div className="forecast-day-icon">{day.icon}</div>
+                  <div className="forecast-day-temps">
+                    <div className="forecast-temp-max">{day.tempMax}°</div>
+                    <div className="forecast-temp-min">{day.tempMin}°</div>
+                  </div>
                 </div>
-              </div>
-            ))}
+              ))}
+            </div>
           </div>
         </section>
       )}
