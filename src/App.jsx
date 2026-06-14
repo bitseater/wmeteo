@@ -469,7 +469,10 @@ export default function App() {
               </div>
             </div>
             <div className="modal-footer">
-              <p className="version-tag">Versión 1.0.0 — Creado con ❤️ para una experiencia premium</p>
+              <div className="footer-text">
+                <p className="version-tag">Versión 1.0.0 — Creado con ❤️ para una experiencia premium</p>
+                <p className="copyright-tag">Copyright © 2026 Carlos Suárez</p>
+              </div>
               <button className="close-button" onClick={() => setShowAbout(false)}>Cerrar</button>
             </div>
           </div>
