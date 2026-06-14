@@ -76,6 +76,7 @@ export default function App() {
   const [locations, setLocations] = useState([])
   const [message, setMessage] = useState('Introduce una ciudad y pulsa Buscar para ver el clima actual.')
   const [loading, setLoading] = useState(false)
+  const [showAbout, setShowAbout] = useState(false)
 
   const apiKey = import.meta.env.VITE_OPENWEATHER_API_KEY
 
@@ -244,13 +245,11 @@ export default function App() {
 
   return (
     <div className="app weather-app">
-      {weather && (
-        <div className="top-actions">
-          <button type="button">Ver Mapa</button>
-          <button type="button">Configuración</button>
-          <button type="button">Acerca de</button>
-        </div>
-      )}
+      <div className="top-actions">
+        <button type="button">Ver Mapa</button>
+        <button type="button">Configuración</button>
+        <button type="button" onClick={() => setShowAbout(true)}>Acerca de</button>
+      </div>
 
       <header className="app-header">
         <div>
@@ -261,7 +260,7 @@ export default function App() {
       </header>
 
       <form className="search-form" onSubmit={handleSearch}>
-        <label htmlFor="city">Ciudad</label>
+        <label htmlFor="city">Elegir ciudad</label>
         <div className="input-row">
           <input
             id="city"
@@ -421,6 +420,60 @@ export default function App() {
             </div>
           </div>
         </section>
+      )}
+
+      {showAbout && (
+        <div className="modal-overlay" onClick={() => setShowAbout(false)}>
+          <div className="modal-content" onClick={(e) => e.stopPropagation()}>
+            <div className="modal-header">
+              <h2>Acerca de WMeteo</h2>
+              <button className="close-button-top" onClick={() => setShowAbout(false)}>&times;</button>
+            </div>
+            <div className="modal-body">
+              <p className="modal-intro">
+                WMeteo es una aplicación meteorológica moderna, intuitiva y de alto rendimiento que te permite consultar el clima actual y la previsión de los próximos días de cualquier ciudad del mundo.
+              </p>
+              
+              <h3>Características clave</h3>
+              <div className="about-features">
+                <div className="about-feature-item">
+                  <span className="feature-icon">🔍</span>
+                  <div>
+                    <strong>Búsqueda avanzada</strong>
+                    <p>Encuentra ciudades del mundo y resuelve conflictos de nombres duplicados al instante.</p>
+                  </div>
+                </div>
+                <div className="about-feature-item">
+                  <span className="feature-icon">📊</span>
+                  <div>
+                    <strong>Gráfico de tendencia</strong>
+                    <p>Visualiza de forma clara las fluctuaciones de temperaturas máximas y mínimas para los próximos 5 días.</p>
+                  </div>
+                </div>
+                <div className="about-feature-item">
+                  <span className="feature-icon">⏱️</span>
+                  <div>
+                    <strong>Pronóstico por horas</strong>
+                    <p>Visualización del clima en las próximas horas para planificar tu día con precisión.</p>
+                  </div>
+                </div>
+              </div>
+
+              <h3>Tecnologías utilizadas</h3>
+              <div className="tech-badges">
+                <span className="tech-badge react">React</span>
+                <span className="tech-badge vite">Vite</span>
+                <span className="tech-badge api">OpenWeather API</span>
+                <span className="tech-badge svg">SVG Dinámico</span>
+                <span className="tech-badge css">Vanilla CSS</span>
+              </div>
+            </div>
+            <div className="modal-footer">
+              <p className="version-tag">Versión 1.0.0 — Creado con ❤️ para una experiencia premium</p>
+              <button className="close-button" onClick={() => setShowAbout(false)}>Cerrar</button>
+            </div>
+          </div>
+        </div>
       )}
     </div>
   )
