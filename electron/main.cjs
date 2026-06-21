@@ -15,7 +15,11 @@ function createWindow() {
     },
   });
 
-  mainWindow.loadFile(path.join(__dirname, '..', 'dist', 'index.html'));
+  if (process.env.WMETEO_DEV_SERVER_URL) {
+    mainWindow.loadURL(process.env.WMETEO_DEV_SERVER_URL);
+  } else {
+    mainWindow.loadFile(path.join(__dirname, '..', 'dist', 'index.html'));
+  }
 
   mainWindow.webContents.setWindowOpenHandler(({ url }) => {
     shell.openExternal(url);
