@@ -71,7 +71,6 @@
     "theme_current_light": "claro",
     "theme_current": "Tema actual: {{theme}}",
     "close": "Cerrar",
-    "language_label": "Idioma",
     "theme_light_title": "Claro",
     "theme_light_desc": "Fondo luminoso y tarjetas claras.",
     "theme_dark_title": "Oscuro",

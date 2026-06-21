@@ -1,13 +1,8 @@
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 
-const LANGUAGES = [
-  { code: 'es', label: 'Español', flag: '🇪🇸' },
-  { code: 'en', label: 'English', flag: '🇬🇧' },
-]
-
-export default function SettingsMenuSection({ theme, onThemeChange, onLanguageChange }) {
-  const { t, i18n } = useTranslation()
+export default function SettingsMenuSection({ theme, onThemeChange }) {
+  const { t } = useTranslation()
   const [showSettings, setShowSettings] = useState(false)
 
   return (
@@ -54,28 +49,6 @@ export default function SettingsMenuSection({ theme, onThemeChange, onLanguageCh
                     <small>{t('settings.theme_dark_desc')}</small>
                   </span>
                 </button>
-              </div>
-
-              {/* ── Language selector ── */}
-              <div className="settings-section">
-                <p className="settings-section-label">{t('settings.language_label')}</p>
-                <div className="language-options" role="radiogroup" aria-label={t('settings.language_label')}>
-                  {LANGUAGES.map((lang) => (
-                    <button
-                      key={lang.code}
-                      type="button"
-                      className={`language-option ${i18n.language === lang.code ? 'is-selected' : ''}`}
-                      onClick={() => {
-                        onLanguageChange(lang.code)
-                      }}
-                      role="radio"
-                      aria-checked={i18n.language === lang.code}
-                    >
-                      <span className="lang-flag">{lang.flag}</span>
-                      <span className="lang-label">{lang.label}</span>
-                    </button>
-                  ))}
-                </div>
               </div>
             </div>
 

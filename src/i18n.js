@@ -11,9 +11,6 @@ const normalizeLanguage = (language) => {
 }
 
 const getDefaultLanguage = () => {
-  const savedLanguage = normalizeLanguage(localStorage.getItem('wmeteo-lang'))
-  if (savedLanguage) return savedLanguage
-
   const browserLanguages = navigator.languages?.length
     ? navigator.languages
     : [navigator.language]

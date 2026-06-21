@@ -94,22 +94,11 @@ export default function App() {
     es: { owLang: 'es', dateLocale: 'es-ES' },
     en: { owLang: 'en', dateLocale: 'en-GB' },
   }
-  const currentLang = langMap[i18n.language] || langMap.es
 
   useEffect(() => {
     document.documentElement.dataset.theme = theme
     localStorage.setItem('wmeteo-theme', theme)
   }, [theme])
-
-  const handleLanguageChange = (lang) => {
-    i18n.changeLanguage(lang)
-    localStorage.setItem('wmeteo-lang', lang)
-    // Refresh weather data with new language if a city is loaded
-    if (weather) {
-      const savedCity = loadSavedCity()
-      if (savedCity) fetchWeatherByCoords(savedCity, lang).then(setWeather).catch(() => {})
-    }
-  }
 
   const loadSavedCity = () => {
     try {
@@ -297,7 +286,6 @@ export default function App() {
           onThemeChange={setTheme}
           showMap={showMap}
           onToggleMap={() => setShowMap((prev) => !prev)}
-          onLanguageChange={handleLanguageChange}
         />
       )}
 

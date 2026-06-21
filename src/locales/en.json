@@ -71,7 +71,6 @@
     "theme_current_light": "light",
     "theme_current": "Current theme: {{theme}}",
     "close": "Close",
-    "language_label": "Language",
     "theme_light_title": "Light",
     "theme_light_desc": "Bright background with light cards.",
     "theme_dark_title": "Dark",
