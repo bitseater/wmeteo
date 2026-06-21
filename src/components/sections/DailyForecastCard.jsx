@@ -1,4 +1,5 @@
 import React from 'react'
+import { useTranslation } from 'react-i18next'
 
 const CHART_CONFIG = {
   width: 560,
@@ -23,20 +24,22 @@ function buildForecastPoints(daily) {
 }
 
 export default function DailyForecastCard({ weather }) {
+  const { t } = useTranslation()
+
   if (!weather?.daily?.length) return null
 
   const forecastPoints = buildForecastPoints(weather.daily)
 
   return (
     <section className="daily-forecast-card">
-      <div className="info-title">Pronóstico para los próximos 5 días</div>
+      <div className="info-title">{t('weather.daily_title')}</div>
       <div className="forecast-chart-card">
         <svg
           width={CHART_CONFIG.width}
           height={CHART_CONFIG.height}
           viewBox={`0 0 ${CHART_CONFIG.width} ${CHART_CONFIG.height}`}
           role="img"
-          aria-label="Pronóstico de temperatura máxima y mínima"
+          aria-label={t('weather.chart_aria')}
         >
           <rect x="0" y="0" width={CHART_CONFIG.width} height={CHART_CONFIG.height} fill="transparent" />
           <g>
@@ -80,11 +83,11 @@ export default function DailyForecastCard({ weather }) {
         <div className="forecast-legend">
           <span className="legend-item">
             <span className="legend-dot" style={{ backgroundColor: '#2f6ce5' }}></span>
-            Máximo
+            {t('weather.legend_max')}
           </span>
           <span className="legend-item">
             <span className="legend-dot" style={{ backgroundColor: '#f59e0b' }}></span>
-            Mínimo
+            {t('weather.legend_min')}
           </span>
         </div>
 

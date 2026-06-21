@@ -1,9 +1,13 @@
+import { useTranslation } from 'react-i18next'
+
 export default function LocationList({ locations, onSelect }) {
+  const { t } = useTranslation()
+
   if (locations.length === 0) return null
 
   return (
     <section className="location-list-card">
-      <div className="info-title">Ciudades encontradas</div>
+      <div className="info-title">{t('location.found_title')}</div>
       <div className="location-list">
         {locations.map((location) => (
           <button

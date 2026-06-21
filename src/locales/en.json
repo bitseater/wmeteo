@@ -1,0 +1,99 @@
+{
+  "header": {
+    "eyebrow": "Check the weather of your city",
+    "subtitle_weather": "Type a city to see the weather forecast.",
+    "subtitle_map": "Explore the interactive real-time weather map."
+  },
+  "search": {
+    "label": "Choose a city",
+    "placeholder": "London, New York, Paris...",
+    "button": "Search"
+  },
+  "messages": {
+    "initial": "Enter a city and press Search to see the current weather.",
+    "empty_city": "Please enter a city name.",
+    "no_api_key": "OpenWeather API key is missing. Create a .env file with VITE_OPENWEATHER_API_KEY.",
+    "select_city": "Select the correct city from the list.",
+    "error_weather": "Error fetching weather: {{message}}",
+    "city_not_found": "City not found",
+    "no_city_found": "No city found with that name",
+    "error_clima": "Error fetching weather data",
+    "error_forecast": "Error fetching forecast data"
+  },
+  "weather": {
+    "details_title": "Weather Details",
+    "hourly_title": "Hourly Forecast",
+    "daily_title": "5-Day Forecast",
+    "chart_aria": "Maximum and minimum temperature forecast",
+    "legend_max": "Maximum",
+    "legend_min": "Minimum",
+    "details": {
+      "temperature": "Temperature",
+      "feels_like": "Feels Like",
+      "humidity": "Humidity",
+      "wind": "Wind",
+      "uv_index": "UV Index",
+      "sunrise": "Sunrise",
+      "sunset": "Sunset"
+    }
+  },
+  "location": {
+    "found_title": "Cities found"
+  },
+  "map": {
+    "title": "Weather Map",
+    "showing_city": "Showing map for {{city}}{{state}} ({{country}})",
+    "showing_global": "Showing global map",
+    "loading": "Loading interactive map...",
+    "iframe_title": "Weather Map",
+    "layers": {
+      "precipitation": "Precipitation",
+      "pressure": "Pressure",
+      "radar": "Radar",
+      "temperature": "Temperature",
+      "wind": "Wind"
+    },
+    "controls": {
+      "play": "Play 3600x",
+      "pause": "Pause"
+    }
+  },
+  "menu": {
+    "view_weather": "View Weather",
+    "view_map": "View Map",
+    "settings": "Settings",
+    "about": "About"
+  },
+  "settings": {
+    "title": "Settings",
+    "theme_label": "Color Theme",
+    "theme_current_dark": "dark",
+    "theme_current_light": "light",
+    "theme_current": "Current theme: {{theme}}",
+    "close": "Close",
+    "language_label": "Language",
+    "theme_light_title": "Light",
+    "theme_light_desc": "Bright background with light cards.",
+    "theme_dark_title": "Dark",
+    "theme_dark_desc": "High contrast for low-light environments."
+  },
+  "about": {
+    "title": "About WMeteo",
+    "intro": "WMeteo is a modern, intuitive, and high-performance weather application that lets you check the current weather and forecast for any city in the world.",
+    "features_title": "Key Features",
+    "features": {
+      "search_title": "Advanced Search",
+      "search_desc": "Find cities worldwide and instantly resolve duplicate name conflicts.",
+      "chart_title": "Trend Chart",
+      "chart_desc": "Clearly visualize maximum and minimum temperature fluctuations for the next 5 days.",
+      "hourly_title": "Hourly Forecast",
+      "hourly_desc": "View the weather for the coming hours to plan your day with precision."
+    },
+    "tech_title": "Technologies Used",
+    "tech_svg": "Dynamic SVG",
+    "version": "Version 1.0.0 — Built with ❤️ for a premium experience",
+    "copyright": "Copyright © 2026 Carlos Suárez",
+    "github": "View on GitHub",
+    "close": "Close"
+  }
+}

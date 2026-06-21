@@ -1,15 +1,17 @@
 import React, { useState, useEffect } from 'react'
+import { useTranslation } from 'react-i18next'
 
 export default function MapContainer({ city }) {
+  const { t } = useTranslation()
   const [loading, setLoading] = useState(true)
 
-  const plab = 'Precipitación'
-  const pslab = 'Presión'
-  const rlab = 'Radar'
-  const tlab = 'Temperatura'
-  const wlab = 'Viento'
-  const p36 = 'Reproducir 3600x'
-  const pau = 'Pausa'
+  const plab = t('map.layers.precipitation')
+  const pslab = t('map.layers.pressure')
+  const rlab = t('map.layers.radar')
+  const tlab = t('map.layers.temperature')
+  const wlab = t('map.layers.wind')
+  const p36 = t('map.controls.play')
+  const pau = t('map.controls.pause')
 
   const params = [
     `plab=${encodeURIComponent(plab)}`,
@@ -40,11 +42,15 @@ export default function MapContainer({ city }) {
         <div className="map-title-area">
           <span className="map-icon-badge">🗺️</span>
           <div>
-            <h3>Mapa Climatológico</h3>
+            <h3>{t('map.title')}</h3>
             <p className="map-subtitle">
               {city
-                ? `Mostrando mapa para ${city.name}${city.state ? `, ${city.state}` : ''} (${city.country})`
-                : 'Mostrando mapa global'}
+                ? t('map.showing_city', {
+                    city: city.name,
+                    state: city.state ? `, ${city.state}` : '',
+                    country: city.country,
+                  })
+                : t('map.showing_global')}
             </p>
           </div>
         </div>
@@ -53,14 +59,14 @@ export default function MapContainer({ city }) {
         {loading && (
           <div className="map-spinner-overlay">
             <div className="spinner"></div>
-            <p>Cargando mapa interactivo...</p>
+            <p>{t('map.loading')}</p>
           </div>
         )}
         <iframe
           src={url}
           className="map-iframe"
           onLoad={() => setLoading(false)}
-          title="Mapa Meteorológico"
+          title={t('map.iframe_title')}
           allowFullScreen
         ></iframe>
       </div>

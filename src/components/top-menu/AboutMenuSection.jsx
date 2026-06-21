@@ -1,64 +1,66 @@
 import { useState } from 'react'
+import { useTranslation } from 'react-i18next'
 
 export default function AboutMenuSection() {
+  const { t } = useTranslation()
   const [showAbout, setShowAbout] = useState(false)
 
   return (
     <>
       <button type="button" onClick={() => setShowAbout(true)}>
-        Acerca de
+        {t('menu.about')}
       </button>
 
       {showAbout && (
         <div className="modal-overlay" onClick={() => setShowAbout(false)}>
           <div className="modal-content" onClick={(e) => e.stopPropagation()}>
             <div className="modal-header">
-              <h2>Acerca de WMeteo</h2>
+              <h2>{t('about.title')}</h2>
               <button className="close-button-top" onClick={() => setShowAbout(false)}>&times;</button>
             </div>
             <div className="modal-body">
               <p className="modal-intro">
-                WMeteo es una aplicación meteorológica moderna, intuitiva y de alto rendimiento que te permite consultar el clima actual y la previsión de los próximos días de cualquier ciudad del mundo.
+                {t('about.intro')}
               </p>
 
-              <h3>Características clave</h3>
+              <h3>{t('about.features_title')}</h3>
               <div className="about-features">
                 <div className="about-feature-item">
                   <span className="feature-icon">🔍</span>
                   <div>
-                    <strong>Búsqueda avanzada</strong>
-                    <p>Encuentra ciudades del mundo y resuelve conflictos de nombres duplicados al instante.</p>
+                    <strong>{t('about.features.search_title')}</strong>
+                    <p>{t('about.features.search_desc')}</p>
                   </div>
                 </div>
                 <div className="about-feature-item">
                   <span className="feature-icon">📊</span>
                   <div>
-                    <strong>Gráfico de tendencia</strong>
-                    <p>Visualiza de forma clara las fluctuaciones de temperaturas máximas y mínimas para los próximos 5 días.</p>
+                    <strong>{t('about.features.chart_title')}</strong>
+                    <p>{t('about.features.chart_desc')}</p>
                   </div>
                 </div>
                 <div className="about-feature-item">
                   <span className="feature-icon">⏱️</span>
                   <div>
-                    <strong>Pronóstico por horas</strong>
-                    <p>Visualización del clima en las próximas horas para planificar tu día con precisión.</p>
+                    <strong>{t('about.features.hourly_title')}</strong>
+                    <p>{t('about.features.hourly_desc')}</p>
                   </div>
                 </div>
               </div>
 
-              <h3>Tecnologías utilizadas</h3>
+              <h3>{t('about.tech_title')}</h3>
               <div className="tech-badges">
                 <span className="tech-badge react">React</span>
                 <span className="tech-badge vite">Vite</span>
                 <span className="tech-badge api">OpenWeather API</span>
-                <span className="tech-badge svg">SVG Dinámico</span>
+                <span className="tech-badge svg">{t('about.tech_svg')}</span>
                 <span className="tech-badge css">Vanilla CSS</span>
               </div>
             </div>
             <div className="modal-footer">
               <div className="footer-text">
-                <p className="version-tag">Versión 1.0.0 — Creado con ❤️ para una experiencia premium</p>
-                <p className="copyright-tag">Copyright © 2026 Carlos Suárez</p>
+                <p className="version-tag">{t('about.version')}</p>
+                <p className="copyright-tag">{t('about.copyright')}</p>
               </div>
               <div className="modal-footer-actions">
                 <a
@@ -78,9 +80,9 @@ export default function AboutMenuSection() {
                       2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0
                       1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"/>
                   </svg>
-                  Ver en GitHub
+                  {t('about.github')}
                 </a>
-                <button className="close-button" onClick={() => setShowAbout(false)}>Cerrar</button>
+                <button className="close-button" onClick={() => setShowAbout(false)}>{t('about.close')}</button>
               </div>
             </div>
           </div>

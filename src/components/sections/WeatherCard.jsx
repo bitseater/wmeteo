@@ -1,4 +1,8 @@
+import { useTranslation } from 'react-i18next'
+
 export default function WeatherCard({ weather }) {
+  const { t } = useTranslation()
+
   if (!weather) return null
 
   return (
@@ -20,7 +24,7 @@ export default function WeatherCard({ weather }) {
 
       <div className="weather-grid">
         <div className="weather-info">
-          <div className="info-title">Detalles del clima</div>
+          <div className="info-title">{t('weather.details_title')}</div>
           <div className="details-list">
             {weather.details.map((item) => (
               <div key={item.label} className="detail-row">
@@ -32,7 +36,7 @@ export default function WeatherCard({ weather }) {
         </div>
 
         <div className="weather-forecast">
-          <div className="info-title">Pronóstico horario</div>
+          <div className="info-title">{t('weather.hourly_title')}</div>
           <div className="forecast-list">
             {weather.hourly.map((hour) => (
               <div key={hour.time} className="forecast-item">

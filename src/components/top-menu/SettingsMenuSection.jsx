@@ -1,24 +1,32 @@
 import { useState } from 'react'
+import { useTranslation } from 'react-i18next'
 
-export default function SettingsMenuSection({ theme, onThemeChange }) {
+const LANGUAGES = [
+  { code: 'es', label: 'Español', flag: '🇪🇸' },
+  { code: 'en', label: 'English', flag: '🇬🇧' },
+]
+
+export default function SettingsMenuSection({ theme, onThemeChange, onLanguageChange }) {
+  const { t, i18n } = useTranslation()
   const [showSettings, setShowSettings] = useState(false)
 
   return (
     <>
       <button type="button" onClick={() => setShowSettings(true)}>
-        Configuración
+        {t('menu.settings')}
       </button>
 
       {showSettings && (
         <div className="modal-overlay" onClick={() => setShowSettings(false)}>
           <div className="modal-content settings-modal" onClick={(e) => e.stopPropagation()}>
             <div className="modal-header">
-              <h2>Configuración</h2>
+              <h2>{t('settings.title')}</h2>
               <button className="close-button-top" onClick={() => setShowSettings(false)}>&times;</button>
             </div>
 
             <div className="modal-body">
-              <div className="theme-options" role="radiogroup" aria-label="Tema de color">
+              {/* ── Theme selector ── */}
+              <div className="theme-options" role="radiogroup" aria-label={t('settings.theme_label')}>
                 <button
                   type="button"
                   className={`theme-option ${theme === 'light' ? 'is-selected' : ''}`}
@@ -28,8 +36,8 @@ export default function SettingsMenuSection({ theme, onThemeChange }) {
                 >
                   <span className="theme-swatch theme-swatch-light"></span>
                   <span>
-                    <strong>Claro</strong>
-                    <small>Fondo luminoso y tarjetas claras.</small>
+                    <strong>{t('settings.theme_light_title')}</strong>
+                    <small>{t('settings.theme_light_desc')}</small>
                   </span>
                 </button>
 
@@ -42,16 +50,44 @@ export default function SettingsMenuSection({ theme, onThemeChange }) {
                 >
                   <span className="theme-swatch theme-swatch-dark"></span>
                   <span>
-                    <strong>Oscuro</strong>
-                    <small>Contraste alto para poca luz.</small>
+                    <strong>{t('settings.theme_dark_title')}</strong>
+                    <small>{t('settings.theme_dark_desc')}</small>
                   </span>
                 </button>
+              </div>
+
+              {/* ── Language selector ── */}
+              <div className="settings-section">
+                <p className="settings-section-label">{t('settings.language_label')}</p>
+                <div className="language-options" role="radiogroup" aria-label={t('settings.language_label')}>
+                  {LANGUAGES.map((lang) => (
+                    <button
+                      key={lang.code}
+                      type="button"
+                      className={`language-option ${i18n.language === lang.code ? 'is-selected' : ''}`}
+                      onClick={() => {
+                        onLanguageChange(lang.code)
+                      }}
+                      role="radio"
+                      aria-checked={i18n.language === lang.code}
+                    >
+                      <span className="lang-flag">{lang.flag}</span>
+                      <span className="lang-label">{lang.label}</span>
+                    </button>
+                  ))}
+                </div>
               </div>
             </div>
 
             <div className="modal-footer">
-              <p className="version-tag">Tema actual: {theme === 'dark' ? 'oscuro' : 'claro'}</p>
-              <button className="close-button" onClick={() => setShowSettings(false)}>Cerrar</button>
+              <p className="version-tag">
+                {t('settings.theme_current', {
+                  theme: theme === 'dark' ? t('settings.theme_current_dark') : t('settings.theme_current_light'),
+                })}
+              </p>
+              <button className="close-button" onClick={() => setShowSettings(false)}>
+                {t('settings.close')}
+              </button>
             </div>
           </div>
         </div>

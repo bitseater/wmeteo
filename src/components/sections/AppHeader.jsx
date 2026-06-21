@@ -1,13 +1,17 @@
+import { useTranslation } from 'react-i18next'
+
 export default function AppHeader({ showMap }) {
+  const { t } = useTranslation()
+
   return (
     <header className="app-header">
       <div>
-        <p className="eyebrow">Consulta el clima de tu ciudad</p>
+        <p className="eyebrow">{t('header.eyebrow')}</p>
         <h1>WMeteo</h1>
         <p className="subtitle">
           {showMap
-            ? 'Explora el mapa del clima interactivo en tiempo real.'
-            : 'Escribe una ciudad para ver la previsión meteorológica.'}
+            ? t('header.subtitle_map')
+            : t('header.subtitle_weather')}
         </p>
       </div>
     </header>

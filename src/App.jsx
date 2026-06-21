@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react'
+import { useTranslation } from 'react-i18next'
 import TopMenu from './components/top-menu/TopMenu'
 import MapContainer from './components/MapContainer'
 import AppHeader from './components/sections/AppHeader'
@@ -25,15 +26,15 @@ const getWeatherIcon = (iconCode) => {
   return iconMap[iconCode] || '🌤️'
 }
 
-const formatTime = (timestamp, timezoneOffset) => {
+const formatTime = (timestamp, timezoneOffset, locale) => {
   const date = new Date((timestamp + timezoneOffset) * 1000)
-  return date.toLocaleTimeString('es-ES', { hour: '2-digit', minute: '2-digit' })
+  return date.toLocaleTimeString(locale, { hour: '2-digit', minute: '2-digit' })
 }
 
 const getLocalDate = (timestamp, timezoneOffset) =>
   new Date((timestamp + timezoneOffset) * 1000)
 
-const getDailyForecast = (forecastList, timezoneOffset) => {
+const getDailyForecast = (forecastList, timezoneOffset, locale) => {
   const grouped = {}
 
   forecastList.forEach((item) => {
@@ -58,7 +59,7 @@ const getDailyForecast = (forecastList, timezoneOffset) => {
         items[Math.floor(items.length / 2)]
       const temps = items.map((item) => item.main.temp)
       return {
-        dateLabel: getLocalDate(midday.dt, timezoneOffset).toLocaleDateString('es-ES', {
+        dateLabel: getLocalDate(midday.dt, timezoneOffset).toLocaleDateString(locale, {
           weekday: 'short',
           day: 'numeric',
           month: 'short',
@@ -76,20 +77,39 @@ const getDailyForecast = (forecastList, timezoneOffset) => {
 // ── Component ─────────────────────────────────────────────────────────────────
 
 export default function App() {
+  const { t, i18n } = useTranslation()
+
   const [cityInput, setCityInput] = useState('')
   const [weather, setWeather] = useState(null)
   const [locations, setLocations] = useState([])
-  const [message, setMessage] = useState('Introduce una ciudad y pulsa Buscar para ver el clima actual.')
+  const [message, setMessage] = useState(null) // null = use initial key
   const [loading, setLoading] = useState(false)
   const [theme, setTheme] = useState(() => localStorage.getItem('wmeteo-theme') || 'light')
   const [showMap, setShowMap] = useState(false)
 
   const apiKey = import.meta.env.VITE_OPENWEATHER_API_KEY
 
+  // Map i18next language code to OpenWeather lang and date locale
+  const langMap = {
+    es: { owLang: 'es', dateLocale: 'es-ES' },
+    en: { owLang: 'en', dateLocale: 'en-GB' },
+  }
+  const currentLang = langMap[i18n.language] || langMap.es
+
   useEffect(() => {
     document.documentElement.dataset.theme = theme
     localStorage.setItem('wmeteo-theme', theme)
   }, [theme])
+
+  const handleLanguageChange = (lang) => {
+    i18n.changeLanguage(lang)
+    localStorage.setItem('wmeteo-lang', lang)
+    // Refresh weather data with new language if a city is loaded
+    if (weather) {
+      const savedCity = loadSavedCity()
+      if (savedCity) fetchWeatherByCoords(savedCity, lang).then(setWeather).catch(() => {})
+    }
+  }
 
   const loadSavedCity = () => {
     try {
@@ -106,18 +126,20 @@ export default function App() {
     return null
   }
 
-  const fetchWeatherByCoords = async (location) => {
-    const params = `lat=${location.lat}&lon=${location.lon}&units=metric&lang=es&appid=${apiKey}`
+  const fetchWeatherByCoords = async (location, langOverride) => {
+    const lang = langOverride || i18n.language
+    const { owLang, dateLocale } = langMap[lang] || langMap.es
+    const params = `lat=${location.lat}&lon=${location.lon}&units=metric&lang=${owLang}&appid=${apiKey}`
     const weatherResponse = await fetch(`https://api.openweathermap.org/data/2.5/weather?${params}`)
     if (!weatherResponse.ok) {
       const errorData = await weatherResponse.json()
-      throw new Error(errorData.message || 'Error al obtener el clima')
+      throw new Error(errorData.message || t('messages.error_clima'))
     }
 
     const forecastResponse = await fetch(`https://api.openweathermap.org/data/2.5/forecast?${params}`)
     if (!forecastResponse.ok) {
       const errorData = await forecastResponse.json()
-      throw new Error(errorData.message || 'Error al obtener el pronóstico')
+      throw new Error(errorData.message || t('messages.error_forecast'))
     }
 
     const weatherData = await weatherResponse.json()
@@ -138,13 +160,13 @@ export default function App() {
 
     const hourly = Array.isArray(forecastData.list)
       ? forecastData.list.slice(0, 4).map((item) => ({
-          time: formatTime(item.dt, weatherData.timezone),
+          time: formatTime(item.dt, weatherData.timezone, dateLocale),
           temp: `${Math.round(item.main.temp)}°C`,
         }))
       : []
 
     const daily = Array.isArray(forecastData.list)
-      ? getDailyForecast(forecastData.list, weatherData.timezone)
+      ? getDailyForecast(forecastData.list, weatherData.timezone, dateLocale)
       : []
 
     return {
@@ -159,17 +181,17 @@ export default function App() {
       wind: Math.round(weatherData.wind.speed * 3.6),
       feelsLike: Math.round(weatherData.main.feels_like),
       uvIndex: '-',
-      sunrise: formatTime(weatherData.sys.sunrise, weatherData.timezone),
-      sunset: formatTime(weatherData.sys.sunset, weatherData.timezone),
+      sunrise: formatTime(weatherData.sys.sunrise, weatherData.timezone, dateLocale),
+      sunset: formatTime(weatherData.sys.sunset, weatherData.timezone, dateLocale),
       icon: getWeatherIcon(weatherData.weather[0].icon),
       details: [
-        { label: 'Temperatura', value: `${Math.round(weatherData.main.temp)}°C` },
-        { label: 'Sensación', value: `${Math.round(weatherData.main.feels_like)}°C` },
-        { label: 'Humedad', value: `${weatherData.main.humidity}%` },
-        { label: 'Viento', value: `${Math.round(weatherData.wind.speed * 3.6)} km/h` },
-        { label: 'Índice UV', value: 'N/A' },
-        { label: 'Amanecer', value: formatTime(weatherData.sys.sunrise, weatherData.timezone) },
-        { label: 'Atardecer', value: formatTime(weatherData.sys.sunset, weatherData.timezone) },
+        { label: t('weather.details.temperature'), value: `${Math.round(weatherData.main.temp)}°C` },
+        { label: t('weather.details.feels_like'),   value: `${Math.round(weatherData.main.feels_like)}°C` },
+        { label: t('weather.details.humidity'),     value: `${weatherData.main.humidity}%` },
+        { label: t('weather.details.wind'),         value: `${Math.round(weatherData.wind.speed * 3.6)} km/h` },
+        { label: t('weather.details.uv_index'),     value: 'N/A' },
+        { label: t('weather.details.sunrise'),      value: formatTime(weatherData.sys.sunrise, weatherData.timezone, dateLocale) },
+        { label: t('weather.details.sunset'),       value: formatTime(weatherData.sys.sunset, weatherData.timezone, dateLocale) },
       ],
       hourly,
       daily,
@@ -180,14 +202,14 @@ export default function App() {
     event.preventDefault()
     const city = cityInput.trim()
     if (!city) {
-      setMessage('Por favor escribe el nombre de una ciudad.')
+      setMessage(t('messages.empty_city'))
       setWeather(null)
       setLocations([])
       return
     }
 
     if (!apiKey) {
-      setMessage('Falta la clave de OpenWeather. Crea un archivo .env con VITE_OPENWEATHER_API_KEY.')
+      setMessage(t('messages.no_api_key'))
       setWeather(null)
       setLocations([])
       return
@@ -204,12 +226,12 @@ export default function App() {
       )
       if (!geoResponse.ok) {
         const errorData = await geoResponse.json()
-        throw new Error(errorData.message || 'No se encontró la ciudad')
+        throw new Error(errorData.message || t('messages.city_not_found'))
       }
 
       const geoData = await geoResponse.json()
       if (!Array.isArray(geoData) || geoData.length === 0) {
-        throw new Error('No se encontró ninguna ciudad con ese nombre')
+        throw new Error(t('messages.no_city_found'))
       }
 
       if (geoData.length > 1) {
@@ -222,7 +244,7 @@ export default function App() {
             lon: item.lon,
           }))
         )
-        setMessage('Selecciona la ciudad correcta de la lista.')
+        setMessage(t('messages.select_city'))
         return
       }
 
@@ -238,7 +260,7 @@ export default function App() {
     } catch (error) {
       setWeather(null)
       setLocations([])
-      setMessage(`Error obteniendo el clima: ${error.message}`)
+      setMessage(t('messages.error_weather', { message: error.message }))
     } finally {
       setLoading(false)
     }
@@ -253,7 +275,7 @@ export default function App() {
       const weatherResult = await fetchWeatherByCoords(location)
       setWeather(weatherResult)
     } catch (error) {
-      setMessage(`Error obteniendo el clima: ${error.message}`)
+      setMessage(t('messages.error_weather', { message: error.message }))
       setWeather(null)
     } finally {
       setLoading(false)
@@ -265,6 +287,8 @@ export default function App() {
       ? { lat: weather.lat, lon: weather.lon, name: weather.city, state: weather.state, country: weather.country }
       : loadSavedCity()
 
+  const displayMessage = message === null ? t('messages.initial') : message
+
   return (
     <div className="app weather-app">
       {weather && (
@@ -273,6 +297,7 @@ export default function App() {
           onThemeChange={setTheme}
           showMap={showMap}
           onToggleMap={() => setShowMap((prev) => !prev)}
+          onLanguageChange={handleLanguageChange}
         />
       )}
 
@@ -288,7 +313,7 @@ export default function App() {
             onSubmit={handleSearch}
           />
           <LocationList locations={locations} onSelect={handleLocationSelect} />
-          {!weather && <AlertMessage message={message} />}
+          {!weather && <AlertMessage message={displayMessage} />}
           <WeatherCard weather={weather} />
           <DailyForecastCard weather={weather} />
         </>

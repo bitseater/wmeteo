@@ -1,0 +1,99 @@
+{
+  "header": {
+    "eyebrow": "Consulta el clima de tu ciudad",
+    "subtitle_weather": "Escribe una ciudad para ver la previsión meteorológica.",
+    "subtitle_map": "Explora el mapa del clima interactivo en tiempo real."
+  },
+  "search": {
+    "label": "Elegir ciudad",
+    "placeholder": "Madrid, Barcelona, Sevilla...",
+    "button": "Buscar"
+  },
+  "messages": {
+    "initial": "Introduce una ciudad y pulsa Buscar para ver el clima actual.",
+    "empty_city": "Por favor escribe el nombre de una ciudad.",
+    "no_api_key": "Falta la clave de OpenWeather. Crea un archivo .env con VITE_OPENWEATHER_API_KEY.",
+    "select_city": "Selecciona la ciudad correcta de la lista.",
+    "error_weather": "Error obteniendo el clima: {{message}}",
+    "city_not_found": "No se encontró la ciudad",
+    "no_city_found": "No se encontró ninguna ciudad con ese nombre",
+    "error_clima": "Error al obtener el clima",
+    "error_forecast": "Error al obtener el pronóstico"
+  },
+  "weather": {
+    "details_title": "Detalles del clima",
+    "hourly_title": "Pronóstico horario",
+    "daily_title": "Pronóstico para los próximos 5 días",
+    "chart_aria": "Pronóstico de temperatura máxima y mínima",
+    "legend_max": "Máximo",
+    "legend_min": "Mínimo",
+    "details": {
+      "temperature": "Temperatura",
+      "feels_like": "Sensación",
+      "humidity": "Humedad",
+      "wind": "Viento",
+      "uv_index": "Índice UV",
+      "sunrise": "Amanecer",
+      "sunset": "Atardecer"
+    }
+  },
+  "location": {
+    "found_title": "Ciudades encontradas"
+  },
+  "map": {
+    "title": "Mapa Climatológico",
+    "showing_city": "Mostrando mapa para {{city}}{{state}} ({{country}})",
+    "showing_global": "Mostrando mapa global",
+    "loading": "Cargando mapa interactivo...",
+    "iframe_title": "Mapa Meteorológico",
+    "layers": {
+      "precipitation": "Precipitación",
+      "pressure": "Presión",
+      "radar": "Radar",
+      "temperature": "Temperatura",
+      "wind": "Viento"
+    },
+    "controls": {
+      "play": "Reproducir 3600x",
+      "pause": "Pausa"
+    }
+  },
+  "menu": {
+    "view_weather": "Ver Clima",
+    "view_map": "Ver Mapa",
+    "settings": "Configuración",
+    "about": "Acerca de"
+  },
+  "settings": {
+    "title": "Configuración",
+    "theme_label": "Tema de color",
+    "theme_current_dark": "oscuro",
+    "theme_current_light": "claro",
+    "theme_current": "Tema actual: {{theme}}",
+    "close": "Cerrar",
+    "language_label": "Idioma",
+    "theme_light_title": "Claro",
+    "theme_light_desc": "Fondo luminoso y tarjetas claras.",
+    "theme_dark_title": "Oscuro",
+    "theme_dark_desc": "Contraste alto para poca luz."
+  },
+  "about": {
+    "title": "Acerca de WMeteo",
+    "intro": "WMeteo es una aplicación meteorológica moderna, intuitiva y de alto rendimiento que te permite consultar el clima actual y la previsión de los próximos días de cualquier ciudad del mundo.",
+    "features_title": "Características clave",
+    "features": {
+      "search_title": "Búsqueda avanzada",
+      "search_desc": "Encuentra ciudades del mundo y resuelve conflictos de nombres duplicados al instante.",
+      "chart_title": "Gráfico de tendencia",
+      "chart_desc": "Visualiza de forma clara las fluctuaciones de temperaturas máximas y mínimas para los próximos 5 días.",
+      "hourly_title": "Pronóstico por horas",
+      "hourly_desc": "Visualización del clima en las próximas horas para planificar tu día con precisión."
+    },
+    "tech_title": "Tecnologías utilizadas",
+    "tech_svg": "SVG Dinámico",
+    "version": "Versión 1.0.0 — Creado con ❤️ para una experiencia premium",
+    "copyright": "Copyright © 2026 Carlos Suárez",
+    "github": "Ver en GitHub",
+    "close": "Cerrar"
+  }
+}
