@@ -1,0 +1,27 @@
+name: Build and Package Windows EXE
+
+on:
+  release:
+    types: [published]
+
+jobs:
+  build:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+      - run: npm ci
+      - run: npm run build
+      - run: npm run dist:exe
+      - uses: actions/upload-artifact@v4
+        with:
+          name: wmeteo-windows-installer
+          path: release/*.exe
+          retention-days: 90
+      - uses: softprops/action-gh-release@v1
+        with:
+          files: release/*.exe
+          generate_release_notes: true

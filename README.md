@@ -44,6 +44,15 @@ Para revisarla localmente:
 npm run preview
 ```
 
+## Descargar ejecutable
+
+[⬇ Descargar WMeteo para Windows](https://github.com/bitseater/wmeteo/releases/latest)
+
+La versión compilada está disponible en la sección **Assets** de cada release de GitHub:
+
+- `WMeteo Setup X.X.X.exe` — instalador NSIS (recomendado)
+- `WMeteo X.X.X.exe` — versión portable
+
 ## Ejecutable de Windows
 
 La aplicación de escritorio usa Electron. Para probar la app en una ventana de escritorio sin generar instalador:
