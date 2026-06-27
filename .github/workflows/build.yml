@@ -1,5 +1,8 @@
 name: Build and Package Windows EXE
 
+env:
+  GH_TOKEN: ${{ secrets.GH_TOKEN }}
+
 on:
   release:
     types: [created]
