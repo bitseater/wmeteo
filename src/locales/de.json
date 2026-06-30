@@ -1,0 +1,98 @@
+{
+  "header": {
+    "eyebrow": "Überprüfen Sie das Wetter in Ihrer Stadt",
+    "subtitle_weather": "Geben Sie eine Stadt ein, um die Wettervorhersage zu sehen.",
+    "subtitle_map": "Erkunden Sie die interaktive Echtzeit-Wetterkarte."
+  },
+  "search": {
+    "label": "Wählen Sie eine Stadt",
+    "placeholder": "London, New York, Paris...",
+    "button": "Suchen"
+  },
+  "messages": {
+    "initial": "Geben Sie eine Stadt ein und drücken Sie Suchen, um das aktuelle Wetter anzuzeigen.",
+    "empty_city": "Bitte geben Sie einen Stadtnamen ein.",
+    "no_api_key": "Der OpenWeather-API-Schlüssel fehlt. Erstellen Sie eine .env-Datei mit VITE_OPENWEATHER_API_KEY.",
+    "select_city": "Wählen Sie die richtige Stadt aus der Liste aus.",
+    "error_weather": "Fehler beim Abrufen des Wetters: {{message}}",
+    "city_not_found": "Stadt nicht gefunden",
+    "no_city_found": "Keine Stadt mit diesem Namen gefunden",
+    "error_clima": "Fehler beim Abrufen der Wetterdaten",
+    "error_forecast": "Fehler beim Abrufen der Vorhersagedaten"
+  },
+  "weather": {
+    "details_title": "Wetterdetails",
+    "hourly_title": "Stündliche Vorhersage",
+    "daily_title": "5-Tage-Vorhersage",
+    "chart_aria": "Vorhersage der Höchst- und Tiefsttemperaturen",
+    "legend_max": "Maximum",
+    "legend_min": "Minimum",
+    "details": {
+      "temperature": "Temperatur",
+      "feels_like": "Gefühlt wie",
+      "humidity": "Luftfeuchtigkeit",
+      "wind": "Wind",
+      "uv_index": "UV-Index",
+      "sunrise": "Sonnenaufgang",
+      "sunset": "Sonnenuntergang"
+    }
+  },
+  "location": {
+    "found_title": "Gefundene Städte"
+  },
+  "map": {
+    "title": "Wetterkarte",
+    "showing_city": "Zeige Karte für {{city}}{{state}} ({{country}})",
+    "showing_global": "Zeige weltweite Karte",
+    "loading": "Interaktive Karte wird geladen...",
+    "iframe_title": "Wetterkarte",
+    "layers": {
+      "precipitation": "Niederschlag",
+      "pressure": "Luftdruck",
+      "radar": "Radar",
+      "temperature": "Temperatur",
+      "wind": "Wind"
+    },
+    "controls": {
+      "play": "Abspielen 3600x",
+      "pause": "Pause"
+    }
+  },
+  "menu": {
+    "view_weather": "Wetter anzeigen",
+    "view_map": "Karte anzeigen",
+    "settings": "Einstellungen",
+    "about": "Über uns"
+  },
+  "settings": {
+    "title": "Einstellungen",
+    "theme_label": "Farbthema",
+    "theme_current_dark": "dunkel",
+    "theme_current_light": "hell",
+    "theme_current": "Aktuelles Thema: {{theme}}",
+    "close": "Schließen",
+    "theme_light_title": "Hell",
+    "theme_light_desc": "Heller Hintergrund mit hellen Karten.",
+    "theme_dark_title": "Dunkel",
+    "theme_dark_desc": "Hoher Kontrast für Umgebungen mit wenig Licht."
+  },
+  "about": {
+    "title": "Über WMeteo",
+    "intro": "WMeteo ist eine moderne, intuitive und leistungsstarke Wetter-App, mit der Sie das aktuelle Wetter und die Vorhersage für jede Stadt weltweit überprüfen können.",
+    "features_title": "Hauptfunktionen",
+    "features": {
+      "search_title": "Erweiterte Suche",
+      "search_desc": "Finden Sie Städte weltweit und lösen Sie doppelte Namenskonflikte sofort.",
+      "chart_title": "Trenddiagramm",
+      "chart_desc": "Visualisieren Sie die Höchst- und Tiefsttemperaturschwankungen für die nächsten 5 Tage.",
+      "hourly_title": "Stündliche Vorhersage",
+      "hourly_desc": "Sehen Sie das Wetter für die kommenden Stunden, um Ihren Tag präzise zu planen."
+    },
+    "tech_title": "Verwendete Technologien",
+    "tech_svg": "Dynamische SVG",
+    "version": "Version 1.0.0 — Mit ❤️ für ein erstklassiges Erlebnis entwickelt",
+    "copyright": "Copyright © 2026 Carlos Suárez",
+    "github": "Auf GitHub ansehen",
+    "close": "Schließen"
+  }
+}

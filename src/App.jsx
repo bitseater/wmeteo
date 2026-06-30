@@ -93,6 +93,8 @@ export default function App() {
   const langMap = {
     es: { owLang: 'es', dateLocale: 'es-ES' },
     en: { owLang: 'en', dateLocale: 'en-GB' },
+    fr: { owLang: 'fr', dateLocale: 'fr-FR' },
+    de: { owLang: 'de', dateLocale: 'de-DE' },
   }
 
   useEffect(() => {

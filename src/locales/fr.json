@@ -1,0 +1,98 @@
+{
+  "header": {
+    "eyebrow": "Consultez la météo de votre ville",
+    "subtitle_weather": "Saisissez une ville pour voir les prévisions météo.",
+    "subtitle_map": "Explorez la carte météo interactive en temps réel."
+  },
+  "search": {
+    "label": "Choisir une ville",
+    "placeholder": "Londres, New York, Paris...",
+    "button": "Rechercher"
+  },
+  "messages": {
+    "initial": "Saisissez une ville et appuyez sur Rechercher pour voir la météo actuelle.",
+    "empty_city": "Veuillez saisir le nom d'une ville.",
+    "no_api_key": "Clé API OpenWeather manquante. Créez un fichier .env avec VITE_OPENWEATHER_API_KEY.",
+    "select_city": "Sélectionnez la ville correcte dans la liste.",
+    "error_weather": "Erreur lors de la récupération de la météo : {{message}}",
+    "city_not_found": "Ville non trouvée",
+    "no_city_found": "Aucune ville trouvée avec ce nom",
+    "error_clima": "Erreur lors de la récupération des données météo",
+    "error_forecast": "Erreur lors de la récupération des prévisions"
+  },
+  "weather": {
+    "details_title": "Détails de la météo",
+    "hourly_title": "Prévisions horaires",
+    "daily_title": "Prévisions sur 5 jours",
+    "chart_aria": "Prévisions de températures maximales et minimales",
+    "legend_max": "Maximum",
+    "legend_min": "Minimum",
+    "details": {
+      "temperature": "Température",
+      "feels_like": "Ressenti",
+      "humidity": "Humidité",
+      "wind": "Vent",
+      "uv_index": "Indice UV",
+      "sunrise": "Lever du soleil",
+      "sunset": "Coucher du soleil"
+    }
+  },
+  "location": {
+    "found_title": "Villes trouvées"
+  },
+  "map": {
+    "title": "Carte Météo",
+    "showing_city": "Affichage de la carte pour {{city}}{{state}} ({{country}})",
+    "showing_global": "Affichage de la carte mondiale",
+    "loading": "Chargement de la carte interactive...",
+    "iframe_title": "Carte Météo",
+    "layers": {
+      "precipitation": "Précipitations",
+      "pressure": "Pression",
+      "radar": "Radar",
+      "temperature": "Température",
+      "wind": "Vent"
+    },
+    "controls": {
+      "play": "Lecture 3600x",
+      "pause": "Pause"
+    }
+  },
+  "menu": {
+    "view_weather": "Voir la Météo",
+    "view_map": "Voir la Carte",
+    "settings": "Paramètres",
+    "about": "À propos"
+  },
+  "settings": {
+    "title": "Paramètres",
+    "theme_label": "Thème de couleur",
+    "theme_current_dark": "sombre",
+    "theme_current_light": "clair",
+    "theme_current": "Thème actuel : {{theme}}",
+    "close": "Fermer",
+    "theme_light_title": "Clair",
+    "theme_light_desc": "Arrière-plan lumineux avec cartes claires.",
+    "theme_dark_title": "Sombre",
+    "theme_dark_desc": "Contraste élevé pour les environnements sombres."
+  },
+  "about": {
+    "title": "À propos de WMeteo",
+    "intro": "WMeteo est une application météo moderne, intuitive et performante qui vous permet de consulter la météo actuelle et les prévisions de n'importe quelle ville du monde.",
+    "features_title": "Fonctionnalités clés",
+    "features": {
+      "search_title": "Recherche avancée",
+      "search_desc": "Trouvez des villes du monde entier et résolvez instantanément les conflits de noms en double.",
+      "chart_title": "Graphique de tendance",
+      "chart_desc": "Visualisez clairement les fluctuations de température maximale et minimale pour les 5 prochains jours.",
+      "hourly_title": "Prévisions horaires",
+      "hourly_desc": "Consultez la météo pour les heures à venir afin de planifier votre journée avec précision."
+    },
+    "tech_title": "Technologies utilisées",
+    "tech_svg": "SVG Dynamique",
+    "version": "Version 1.0.0 — Conçu avec ❤️ pour une expérience premium",
+    "copyright": "Copyright © 2026 Carlos Suárez",
+    "github": "Voir sur GitHub",
+    "close": "Fermer"
+  }
+}
